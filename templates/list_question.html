@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <center><h1>List of Questions</h1></center>
+        
+    {% for question in questions_bank %}
+        <form action = '/edit' method = 'post'>
+            <h4>Grade: {{question.grade}}</h4> <h5>Subject: {{question.subject}}</h5>
+            <p>{{question.id}}. &nbsp; <strong>{{question.question}}</strong></p>
+            <p>Answer: {{question.detailed_answer}}&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+            <input type = "hidden" name = "id" value = {{question.id}} />
+            <input type = "submit" value = "EDIT"></p>
+        </form>
+    {% endfor %}
+
+{% endblock %}

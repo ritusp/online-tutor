@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <center><h1>List of Questions</h1></center>
+        
+   
+        <form action = '/update' method = 'POST'>
+            <table>
+                <tr>
+                    <td>
+                        <label for ="grade">Grade</label>
+                    </td>
+                    <td>
+                        <select name="grade">
+                            {% for grade in ["K", "1st", "2nd", "3rd", "4th", "5th"] %}
+                                <option value = {{edit_question.grade}}>{{ edit_question.grade }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for ="subject">Subject</label>
+                    </td>
+                    <td>
+                        <select name="subject">
+                            {% for subject in ["Math", "English"] %}
+                                <option value = {{edit_question.subject}}>{{ edit_question.subject }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="question">Question</label>
+                    </td>
+                    <td>
+                        <textarea name="question">{{edit_question.question}}</textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="detailed_answer">Detailed Answer</label>
+                    </td>
+                    <td>
+                        <textarea name="detailed_answer">{{edit_question.detailed_answer}}</textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="choice_1">Choice 1</label>
+                    </td>
+                    <td>
+                        <input name="choice_1" type = "text" value = "{{edit_question.choice_1}}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="choice_2">Choice 2</label>
+                    </td>
+                    <td>
+                        <input name="choice_2" type = "text" value = "{{edit_question.choice_2}}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="choice_3">Choice 3</label>
+                    </td>
+                    <td>
+                        <input name="choice_3" type = "text" value = "{{edit_question.choice_3}}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="choice_4">Choice 4</label>
+                    </td>
+                    <td>
+                        <input name="choice_4" type = "text" value = "{{edit_question.choice_4}}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="correct_answer">Correct Answer</label>
+                    </td>
+                   <td>
+                        <input name="correct_answer" type = "text" value = "{{edit_question.correct_answer}}"/>
+                    </td>
+                </tr>
+            </table>
+            <input type = "hidden" name ="id" value = "{{edit_question.id}}" />
+            <input type = "submit" value = "UPDATE" />
+            
+        </form>
+        <a href = "/list_all">CANCEL</a>
+    
+{% endblock %}

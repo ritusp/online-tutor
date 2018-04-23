@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form action = "/test" method="POST">
+    <table>
+        <tr>
+            <td>
+                <label for ="grade">Grade</label>
+            </td>
+            <td>
+                <select name="grade">
+                    {% for grade in ["K", "1st", "2nd", "3rd", "4th", "5th"] %}
+                        <option value = {{grade}}>{{ grade }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for ="subject">Subject</label>
+            </td>
+            <td>
+                <select name="subject">
+                    {% for subject in ["Math", "English"] %}
+                        <option value = {{subject}}>{{ subject }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+    </table>
+    <input type = "submit" value = "Start Test" />
+</form>
+{% endblock %}
