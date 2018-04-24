@@ -1,6 +1,7 @@
 from flask import request, redirect, render_template, flash, session
 from app import app , db
 from model import question_bank, User
+from sqlalchemy.sql.expression import func, select
 
 
 @app.route('/')
@@ -63,14 +64,32 @@ def select():
 
 @app.route('/test', methods=['GET', 'POST'])
 def test():
+    
     if request.method == 'POST':
         grade = str.strip(request.form["grade"])
         subject = str.strip(request.form["subject"])
+        
         questions_bank = question_bank.query.filter_by(grade=grade).filter_by(subject=subject).all()
-        return render_template('test.html', questions_bank=questions_bank)
+        
+        #single_question = question_bank.query.filter_by(grade=grade).filter_by(subject=subject).order_by(func.rand()).first()
+        
+        number_of_questions = len(questions_bank)
+        print(number_of_questions)
 
+        
+        return render_template('test.html', question=questions_bank[0],number_of_questions =  number_of_questions)
+        
     else:
         return render_template('login.html')
+
+@app.route('/result', methods = ['POST'])
+def result():
+    correct = int(request.form["count"])
+    total = int(request.form["total"])
+    percentage = (correct / total) * 100
+
+    return render_template('result.html', correct = correct, total = total, percentage=percentage)
+
 
 @app.route('/login', methods = ['POST', 'GET'])
 def login():

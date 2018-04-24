@@ -1,8 +1,7 @@
-{% extends "base.html" %}
+ {% extends "base.html" %}
 
 {% block content %}
-    {% for question in questions_bank %}
-        <form action = "/result" method="POST">
+<form action = "/result" method="POST">
             <table>
                 <tr>
                     <td>
@@ -32,12 +31,11 @@
                         <input name="choice" type = "radio" value = {{question.choice_4}} /> {{question.choice_4}}
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <input type = "submit" value = "Next" />
-                    </td>
-                </tr>
+
             </table>
-        </form>
-    {% endfor %}
+        
+    
+    <input type = "hidden" name = "total" value = "abcd" />
+    <input type = "submit" value = "Submit" />
+</form>
 {% endblock %}
