@@ -183,6 +183,8 @@ def signup():
 def logout():
     del session['questionIdList']
     del session['correctAnswer']
+    del session['grade']
+    del session['subject']
     #del session['username']
     return redirect('/login')
 
