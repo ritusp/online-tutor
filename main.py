@@ -66,29 +66,56 @@ def select():
 def test():
     
     if request.method == 'POST':
-        grade = str.strip(request.form["grade"])
-        subject = str.strip(request.form["subject"])
         
-        questions_bank = question_bank.query.filter_by(grade=grade).filter_by(subject=subject).all()
         
-        #single_question = question_bank.query.filter_by(grade=grade).filter_by(subject=subject).order_by(func.rand()).first()
-        
-        number_of_questions = len(questions_bank)
-        print(number_of_questions)
+        if session.get('grade') and session.get('subject') :
+            grade = session['grade']
+            subject = session['subject']
+        else:
+            grade = str.strip(request.form["grade"])
+            subject = str.strip(request.form["subject"])
+            session['grade'] = grade
+            session['subject'] = subject
 
-        
-        return render_template('test.html', question=questions_bank[0],number_of_questions =  number_of_questions)
+        questionIdList =[]
+
+        if session.get('questionIdList'):
+            questionIdList = session['questionIdList']
+            print(session['questionIdList'])
+            questionId = questionIdList.pop()
+            session['questionIdList'] = questionIdList
+            
+            question = question_bank.query.get(questionId)
+            session['correctAnswer'] = question.correct_answer
+
+        else:
+            questions_bank = question_bank.query.filter_by(grade=grade).filter_by(subject=subject).all()
+            
+            question = questions_bank[0]
+            session['correctAnswer'] = question.correct_answer
+
+            for question in questions_bank :
+                print (question.id)
+                questionIdList.append(question.id)   
+                session['questionIdList'] = questionIdList
+
+        print(session['questionIdList'])
+  
+        return render_template('test.html', question=question )
         
     else:
         return render_template('login.html')
 
 @app.route('/result', methods = ['POST'])
 def result():
-    correct = int(request.form["count"])
-    total = int(request.form["total"])
-    percentage = (correct / total) * 100
-
-    return render_template('result.html', correct = correct, total = total, percentage=percentage)
+    #check the answer
+    selectedAnswer = request.form['choice']
+    correctAnswer = session['correctAnswer']
+    if selectedAnswer == correctAnswer:
+        isAnswerCorrect = True 
+    else:
+        isAnswerCorrect = False 
+    return render_template('result.html', isAnswerCorrect = isAnswerCorrect, selectedAnswer = selectedAnswer, correctAnswer= correctAnswer)
 
 
 @app.route('/login', methods = ['POST', 'GET'])
@@ -154,8 +181,10 @@ def signup():
 
 @app.route('/logout', methods = ['GET'])
 def logout():
-    del session['username']
-    return redirect('/blog')
+    del session['questionIdList']
+    del session['correctAnswer']
+    #del session['username']
+    return redirect('/login')
 
 if __name__ == '__main__':
     app.run()
