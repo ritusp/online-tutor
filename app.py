@@ -1,6 +1,5 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql.expression import func, select
 
 app = Flask(__name__)
 app.config['DEBUG'] = True

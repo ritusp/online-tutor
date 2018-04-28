@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
+    Current Score : {{ score }}
+    Question Number: {{ count }}
     {% if isAnswerCorrect %}
         <center><h1>You answer is Correct </h1></center>
         
@@ -19,6 +21,13 @@
 
     {% endif %}
     <form action = "/test" method="POST">
-        <input type = "submit" value = "Next Qustion" />
+    
+        {% if lastQuestion %}
+            <p>Congratulations your reached end of this test. Please submit to check the final</p>
+            <input type = "submit" value = "Check Result" />
+        {% else %}
+            <input type = "submit" value = "Next Qustion" />
+        {% endif %}
     </form>
+
 {% endblock %}

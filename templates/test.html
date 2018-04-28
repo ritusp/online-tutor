@@ -1,11 +1,14 @@
  {% extends "base.html" %}
 
 {% block content %}
+
+
 <form action = "/result" method="POST">
             <table>
                 <tr>
                     <td>
-                        <label for="question">Question:</label>
+
+                        <label for="question"> Question ({{ session.get('count')}}) : </label>
                     </td>
                     <td>
                         <strong>{{ question.question}}</strong>

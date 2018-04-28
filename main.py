@@ -1,6 +1,6 @@
 from flask import request, redirect, render_template, flash, session
 from app import app , db
-from model import question_bank, User
+from model import question_bank, User, test_result
 from sqlalchemy.sql.expression import func, select
 
 
@@ -85,37 +85,76 @@ def test():
             questionId = questionIdList.pop()
             session['questionIdList'] = questionIdList
             
-            question = question_bank.query.get(questionId)
-            session['correctAnswer'] = question.correct_answer
+            questionForTest = question_bank.query.get(questionId)
+            
+            session['correctAnswer'] = questionForTest.correct_answer
 
         else:
             questions_bank = question_bank.query.filter_by(grade=grade).filter_by(subject=subject).all()
             
-            question = questions_bank[0]
-            session['correctAnswer'] = question.correct_answer
+            questionForTest = questions_bank[0]
+            
+            session['correctAnswer'] = questionForTest.correct_answer
 
             for question in questions_bank :
                 print (question.id)
                 questionIdList.append(question.id)   
-                session['questionIdList'] = questionIdList
+            
+            session['questionIdList'] = questionIdList
 
         print(session['questionIdList'])
   
-        return render_template('test.html', question=question )
+        return render_template('test.html', question=questionForTest )
         
     else:
         return render_template('login.html')
 
+
+
 @app.route('/result', methods = ['POST'])
 def result():
     #check the answer
+    
+    score = 0
+    count = 0
+    if session.get('count'):
+        count = int(session['count'])
+    else:
+        session['count'] = 0
+
+    count = count + 1
+    session['count'] = count
+
+    if  session.get('score') :
+        score  = int(session['score'])
+    else:
+        session['score'] = 0    
+
     selectedAnswer = request.form['choice']
     correctAnswer = session['correctAnswer']
     if selectedAnswer == correctAnswer:
-        isAnswerCorrect = True 
+        isAnswerCorrect = True
+        score = score+1
+        session['score'] = score 
     else:
         isAnswerCorrect = False 
-    return render_template('result.html', isAnswerCorrect = isAnswerCorrect, selectedAnswer = selectedAnswer, correctAnswer= correctAnswer)
+    
+    total_num_of_test_questions = 3
+    if count < total_num_of_test_questions:
+        
+        isLastQuestion = True if (count == total_num_of_test_questions-1) else False
+        
+        return render_template('result.html', isAnswerCorrect = isAnswerCorrect, selectedAnswer = selectedAnswer, correctAnswer= correctAnswer, score=score, count = count , isLastQuestion = isLastQuestion)
+    else:
+        return render_template('final_score.html', score=score, count = count)
+
+
+@app.route('/finalresult', methods = ['POST'])
+def finalresult():
+    #check the answer
+     
+    return render_template('certificate.html')
+   # return render_template('result.html', isAnswerCorrect = isAnswerCorrect, selectedAnswer = selectedAnswer, correctAnswer= correctAnswer)
 
 
 @app.route('/login', methods = ['POST', 'GET'])
@@ -185,6 +224,8 @@ def logout():
     del session['correctAnswer']
     del session['grade']
     del session['subject']
+    del session['score']
+    del session['count']
     #del session['username']
     return redirect('/login')
 
