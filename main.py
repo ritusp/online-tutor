@@ -116,14 +116,15 @@ def result():
     #check the answer
     
     score = 0
+    
     count = 0
+
     if session.get('count'):
         count = int(session['count'])
     else:
         session['count'] = 0
 
-    count = count + 1
-    session['count'] = count
+    
 
     if  session.get('score') :
         score  = int(session['score'])
@@ -140,20 +141,29 @@ def result():
         isAnswerCorrect = False 
     
     total_num_of_test_questions = 3
+
     if count < total_num_of_test_questions:
         
-        isLastQuestion = True if (count == total_num_of_test_questions-1) else False
+        count = count + 1
+        session['count'] = count
         
-        return render_template('result.html', isAnswerCorrect = isAnswerCorrect, selectedAnswer = selectedAnswer, correctAnswer= correctAnswer, score=score, count = count , isLastQuestion = isLastQuestion)
+        isLastQuestion = True
+        if count < total_num_of_test_questions:
+            isLastQuestion = False
+
+        return render_template('result.html', isAnswerCorrect = isAnswerCorrect, selectedAnswer = selectedAnswer, correctAnswer= correctAnswer, score=score, count = count, isLastQuestion = isLastQuestion)
     else:
         return render_template('final_score.html', score=score, count = count)
 
+@app.route('/certificate')
+def certificate():
+    return render_template('certificate.html')
 
 @app.route('/finalresult', methods = ['POST'])
 def finalresult():
     #check the answer
      
-    return render_template('certificate.html')
+    return render_template('final_score.html')
    # return render_template('result.html', isAnswerCorrect = isAnswerCorrect, selectedAnswer = selectedAnswer, correctAnswer= correctAnswer)
 
 

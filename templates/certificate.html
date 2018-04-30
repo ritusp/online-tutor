@@ -8,12 +8,15 @@
     <div class="card">
        <center> <h1 style="text-align:center">Certificate of Appreciation</h1>
         <h3>Presented to</h3>
-        <h2>{{username}}</h2>
-        <h3>on date {{date}}</h3>
-        <h3>for scoring {% (score / count) * 100 %} % in {{ grade }} {{ subject }} </h3></center>
+        <h2>{{session.get('username')}}</h2>
+        <h3>on date </h3>
+       
       
      </div>
+     <form action = "/finalresult" method="POST">
+        <input type = "submit" value = "BACK" /> 
+       
+    </form>
         
-        <h3><a href = "final_score.html">BACK</a></h3>
 
 {% endblock %}
